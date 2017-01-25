@@ -1,6 +1,6 @@
-Arbitrary large number systems
+PosNum
 ===============================
-Represent arbitrary large number systems and changes the base of a number from any base to any base
+Computation with arbitrary large positional number systems in Python
 
 This is probably one of my most used homework-type problem, ever. Instead of reinventing the wheel every single time, I've decided to just standardize the reinvention here! 
 
