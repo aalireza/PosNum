@@ -1,8 +1,7 @@
 from ast import literal_eval as leval
-import os
-import string
+from string import ascii_letters
 
-STANDARD_ALPHABETS = set(range(2, 37))
+STANDARD_ALPHABETS = set(range(2, 63))
 AVAILABLE_ALPHABETS = STANDARD_ALPHABETS | set([256])
 
 
@@ -10,9 +9,9 @@ def _alphabet_maker(length):
     if length in AVAILABLE_ALPHABETS:
         if length < 10:
             return {i: str(i) for i in range(length)}
-        if length < 37:
+        if length < 63:
             return dict({i: str(i) for i in range(10)}.items() +
-                        {i + 10: string.ascii_lowercase[i]
+                        {i + 10: ascii_letters[i]
                          for i in range(length - 10)}.items())
         if length == 256:
             with open(r"./data/base256.txt", 'r') as f:
