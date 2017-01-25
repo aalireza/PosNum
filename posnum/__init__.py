@@ -1,17 +1,30 @@
-NUM_REPO = dict(
-    dict({i: str(i) for i in range(10)}).items() +
-    dict({10: 'a', 11: 'b', 12: 'c', 13: 'd',
-          14: 'e', 15: 'f', 16: 'g'}).items()
-)
+import string
+
+STANDARD_ALPHABETS = set(range(2, 37))
+AVAILABLE_ALPHABETS = STANDARD_ALPHABETS | set([128, 256])
+
+
+def _alphabet_maker(length):
+    if length in AVAILABLE_ALPHABETS:
+        if length < 10:
+            return {i: str(i) for i in range(length)}
+        if length < 37:
+            return dict({i: str(i) for i in range(10)}.items() +
+                        {i + 10: string.ascii_lowercase[i]
+                         for i in range(length - 10)}.items())
+        else:
+            raise Exception
 
 
 class BaseChanger(object):
-    def __init__(self, number, base, delim=""):
-        pass
+    def __init__(self, number, current_base,
+                 current_delim="", current_alphabet=None):
+        self.number = number
+        self.current_base = current_base
+        self.current_delim = current_delim
+        self.alphabet = current_alphabet
 
-def base_change(number, origin_base, target_base, delim=""):
-
-    def base_10_to_b(decimal, b, delim=""):
+    def _base_10_to_b(self, decimal, b, delim=""):
         """
         Changes the base of a decimal to b where b <= len(NUM_REPO.items())
         Parameters
@@ -27,14 +40,13 @@ def base_change(number, origin_base, target_base, delim=""):
         while current != 0:
             current, remainder = divmod(current, b)
             if 26 > remainder > 9:
-                remainder_string = NUM_REPO[remainder]
+                remainder_string = self.alphabet[remainder]
             else:
                 remainder_string = str(remainder)
             new_num_string = remainder_string + new_num_string
         return new_num_string
 
-
-    def base_b_to_10(number, b, delim=""):
+    def _base_b_to_10(self, number, b, delim=""):
         """
         Changes the base of `number` from `b` to 10.
         Parameters
@@ -52,11 +64,10 @@ def base_change(number, origin_base, target_base, delim=""):
             number = str(number).split(delim)
         number.reverse()
         for i in range(len(number)):
-            for j in NUM_REPO:
-                if number[i] == NUM_REPO[j]:
+            for j in self.alphabet:
+                if number[i] == self.alphabet[j]:
                     result += int(j) * b ** int(i)
         return result
 
-    return base_10_to_b(
-        base_b_to_10(number, origin_base, delim), target_base, delim
-    )
+    def change(self, target_base, target_delim, target_alphabet):
+        pass
