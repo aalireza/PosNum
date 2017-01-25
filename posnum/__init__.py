@@ -1,7 +1,9 @@
+from ast import literal_eval as leval
+import os
 import string
 
 STANDARD_ALPHABETS = set(range(2, 37))
-AVAILABLE_ALPHABETS = STANDARD_ALPHABETS | set([128, 256])
+AVAILABLE_ALPHABETS = STANDARD_ALPHABETS | set([256])
 
 
 def _alphabet_maker(length):
@@ -12,8 +14,9 @@ def _alphabet_maker(length):
             return dict({i: str(i) for i in range(10)}.items() +
                         {i + 10: string.ascii_lowercase[i]
                          for i in range(length - 10)}.items())
-        else:
-            raise Exception
+        if length == 256:
+            with open(r"./data/base256.txt", 'r') as f:
+                return {i: leval(e) for i, e in enumerate(f.readlines())}
 
 
 class BaseChanger(object):
